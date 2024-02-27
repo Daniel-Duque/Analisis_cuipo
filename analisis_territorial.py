@@ -31,7 +31,7 @@ st.title("gasto presupuestal")
 tab0,tab1,tab2 = st.tabs(['selección','gastos',"nombres"])
 with tab0:
   muni = st.selectbox("NOMBRE_ENTIDAD",
-                        filtrado1["NOMBRE_ENTIDAD"])
+  filtrado1["NOMBRE_ENTIDAD"])
                           
   #pres_gasto=pd.read_csv(r"bases_cuipo_contraloria/OVCF_-_CUIPO_-_Programaci_n_de_Gastos_20240213.csv",skiprows=lambda x: x not in filter_muni)
   #pres_ingr=pd.read_csv(r"bases_cuipo_contraloria/OVCF_-_CUIPO_-_Programaci_n_de_Ingresos_20240213.csv",skiprows=lambda x: x not in filter_muni)
@@ -44,12 +44,9 @@ with tab0:
 with tab1:
 
   eje_gasto=pd.read_csv(
-    r"bases_cuipo_contraloria/OVCF_-_CUIPO_-_Ejecuci_n_de_Gastos_20240213.csv",skiprows=lambda x: x not in filtrado1)
+    r"bases_cuipo_contraloria/OVCF_-_CUIPO_-_Ejecuci_n_de_Gastos_20240213.csv",skiprows=lambda x: x not in filtrado1["NOMBRE_ENTIDAD"])
     
-  cuenta3=  pd.read_csv(r"bases_cuipo_contraloria/nombre_municipios")
-  category = st.selectbox("NOMBRE_CUENTA",
-                        cuenta3)
-  filter_category = eje_gasto[eje_gasto["NOMBRE_CUENTA"]== category]
+
   
 
 
