@@ -23,21 +23,32 @@ import streamlit as st
 
 st.set_page_config(layout='wide')
 
-cuenta3=eje_gasto["CUENTA_NIVEL_03"].drop_duplicates()
 municipio=eje_gasto["NOMBRE_ENTIDAD"].drop_duplicates()
 st.title("gasto presupuestal")
 
-tab1,tab2 = st.tabs(['gastos',"nombres"])
-
-with tab1:
-  category = st.selectbox("CUENTA_NIVEL_03",
-                        cuenta3)
+tab0,tab1,tab2 = st.tabs(['selección','gastos',"nombres"])
+with tab0:
   muni = st.selectbox("NOMBRE_ENTIDAD",
                         municipio)
+  filter_muni=eje_gasto[
+  eje_gasto["NOMBRE_ENTIDAD"]== muni]
+  
+  
+  
+  
+  
+with tab1:
 
-  filter_category = eje_gasto[eje_gasto["CUENTA_NIVEL_03"]== category]
-  filter_muni=filter_category[filter_category["NOMBRE_ENTIDAD"]== muni]
+  cuenta3=eje_gasto[
+	"NOMBRE_CUENTA"].drop_duplicates()
 
-  fig = px.line(filter_muni, x="VIGENCIA", y='PAGOS', title='APROPIACION_INICIAL')
+  category = st.selectbox("NOMBRE_CUENTA",
+                        cuenta3)
+  filter_category = filter_muni[filter_muni["NOMBRE_CUENTA"]== category]
+  
+
+
+
+  fig = px.line(filter_category, x="VIGENCIA", y='PAGOS', title='APROPIACION_INICIAL')
   st.plotly_chart(fig)
 
