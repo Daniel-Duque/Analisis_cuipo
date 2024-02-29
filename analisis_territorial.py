@@ -23,15 +23,14 @@ st.set_page_config(layout='wide')
 
 
 filtrado1=pd.read_csv(
-    r"bases_cuipo_contraloria/nombre_municipios.csv")
-print(filtrado1["NOMBRE_ENTIDAD"])
+    r"dic/codigos_nombres")
 
 st.title("gasto presupuestal")
 
 tab0,tab1,tab2 = st.tabs(['selección','gastos',"nombres"])
 with tab0:
   muni = st.selectbox("NOMBRE_ENTIDAD",
-  filtrado1["NOMBRE_ENTIDAD"])
+     filtrado1["NOMBRE_ENTIDAD"])
                           
   #pres_gasto=pd.read_csv(r"bases_cuipo_contraloria/OVCF_-_CUIPO_-_Programaci_n_de_Gastos_20240213.csv",skiprows=lambda x: x not in filter_muni)
   #pres_ingr=pd.read_csv(r"bases_cuipo_contraloria/OVCF_-_CUIPO_-_Programaci_n_de_Ingresos_20240213.csv",skiprows=lambda x: x not in filter_muni)
@@ -46,10 +45,6 @@ with tab1:
   eje_gasto=pd.read_csv(
     r"bases_cuipo_contraloria/OVCF_-_CUIPO_-_Ejecuci_n_de_Gastos_20240213.csv",skiprows=lambda x: x not in filtrado1["NOMBRE_ENTIDAD"])
     
-
-  
-
-
 
   fig = px.line(filter_category, x="VIGENCIA", y='PAGOS', title='APROPIACION_INICIAL')
   st.plotly_chart(fig)

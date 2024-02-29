@@ -18,6 +18,12 @@ pres_ingr=pd.read_csv(r"bases_cuipo_contraloria/OVCF_-_CUIPO_-_Programaci_n_de_I
 eje_gasto=pd.read_csv(r"bases_cuipo_contraloria/OVCF_-_CUIPO_-_Ejecuci_n_de_Gastos_20240213.csv")
 eje_ingr=pd.read_csv(r"bases_cuipo_contraloria/OVCF_-_CUIPO_-_Ejecuci_n_de_Ingresos_20240213.csv")
 
+pres_gasto["tipo"]="pres_gasto"
+pres_ingr["tipo"]="pres_ingreso"
+eje_gasto["tipo"]="eje_gasto"
+eje_ingr["tipo"]="eje_ingreso"
+
+
 full=pd.concat([pres_gasto,pres_ingr], ignore_index=True)
 full=pd.concat([full,eje_ingr], ignore_index=True)
 full=pd.concat([full,eje_gasto], ignore_index=True)
