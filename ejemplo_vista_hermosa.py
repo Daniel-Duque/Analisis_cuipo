@@ -25,15 +25,15 @@ municipio_name=municipio[municipio["CODIGO_ENTIDAD"]==int(municipio_code)][
 
 municipio=municipio.replace('No Aplica', "")
 cuentas=[ 'CUENTA_NIVEL_01', 
-          'CUENTA_NIVEL_02',
-          'CUENTA_NIVEL_03',
-          'CUENTA_NIVEL_04',
-          'CUENTA_NIVEL_05',
-          'CUENTA_NIVEL_06',
-          'CUENTA_NIVEL_07',
-          'CUENTA_NIVEL_08',
-                 
-          ]
+'CUENTA_NIVEL_02',
+'CUENTA_NIVEL_03',
+'CUENTA_NIVEL_04',
+'CUENTA_NIVEL_05',
+'CUENTA_NIVEL_06',
+'CUENTA_NIVEL_07',
+'CUENTA_NIVEL_08',
+
+]
 
 def leave(valor):
     pattern=valor+"."
@@ -47,17 +47,29 @@ def leave(valor):
 # Apply the classification function to each row
 municipio_ingresos=municipio[municipio["tipo"]=="eje_ingreso"]
 municipio=municipio[municipio["VIGENCIA_DEL_GASTO"]=="VIGENCIA ACTUAL"]
-municipio=municipio[municipio["VIGENCIA"]==2023]
+
 municipio=municipio[municipio["TRIMESTRE"]=="Tercer Trimestre"]
 municipio=municipio[municipio["CUENTA"]!="2.99"]
 municipio=municipio[municipio["CUENTA"]!=""]
+municipio2=municipio[municipio["VIGENCIA"]==2022].drop_duplicates(subset=["CUENTA"])
+
+municipio=municipio[municipio["VIGENCIA"]==2023].drop_duplicates(subset=["CUENTA"])
+
+
+municipiomerge=municipio.merge(municipio2,how="inner",on=["CUENTA"],suffixes=["","_y"])
 ##El siguiente código es de Carlos Ortiz con adaptaciones
 
 
-municipio['leave'] = municipio["CUENTA"].apply(leave)
+#municipio['leave'] = municipio["CUENTA"].apply(leave)
 
-municipio=municipio[municipio["leave"]==True]
+#municipio=municipio[municipio["leave"]==True]
 
+#municipiomerge['leave'] = municipiomerge["CUENTA"].apply(leave)
+
+#municipiomerge=municipiomerge[municipiomerge["leave"]==True]
+municipiomerge['APROPIACION_DEFINITIVA']=municipiomerge['APROPIACION_DEFINITIVA']-municipiomerge['APROPIACION_DEFINITIVA_y']
+municipiomerge["signo"]=municipiomerge['APROPIACION_DEFINITIVA'].apply(lambda x:"negativo" if x<0 else "positivo")
+municipiomerge['APROPIACION_DEFINITIVA']=municipiomerge['APROPIACION_DEFINITIVA'].apply(lambda x: x if x>0 else -x)
 st.set_page_config(layout='wide')
 
 
@@ -69,14 +81,16 @@ st.title("gasto presupuestal")
 tab0,tab1,tab2 = st.tabs(['selección','gastos',"nombres"])
 
 with tab0:
-     
     st.header("Treemap")
     
-    fig = px.treemap(municipio, 
-                     path=[px.Constant(municipio_name),
-                               'CUENTA_NIVEL_01',
-                               'SECCION_PRESUPUESTAL',
+    fig = px.treemap(municipiomerge, 
+                     path=[px.Constant(municipio_code),
+                               
                                #'PROGRAMATICO_MGA',
+                               'signo',
+                               
+                               'SECCION_PRESUPUESTAL',
+                               'CUENTA_NIVEL_01', 
                                'CUENTA_NIVEL_02',
                                'CUENTA_NIVEL_03',
                                'CUENTA_NIVEL_04',
@@ -93,56 +107,6 @@ with tab0:
     fig.update_layout(width=1000, height=600)
     
     st.plotly_chart(fig)
-    
-with tab1:
      
-    st.header("Treemap")
     
-    fig = px.treemap(municipio, 
-                     path=[px.Constant(municipio_code),
-                               'SECCION_PRESUPUESTAL',
-                               #'PROGRAMATICO_MGA',
-                               'CUENTA_NIVEL_01', 
-                               'CUENTA_NIVEL_02',
-                               'CUENTA_NIVEL_03',
-                               'CUENTA_NIVEL_04',
-                               'CUENTA_NIVEL_05',
-                               'CUENTA_NIVEL_06',
-                               'CUENTA_NIVEL_07',
-                               'CUENTA_NIVEL_08',
-                               
-                               ],
-                    values='APROPIACION_DEFINITIVA',
-                    title="Matriz de composición anual de los municipios",
-                    branchvalues="total")
-    
-    fig.update_layout(width=1000, height=600)
-    
-    st.plotly_chart(fig)
-
-with tab2:
-     
-    st.header("Treemap")
-    
-    fig = px.treemap(municipio, 
-                     path=[px.Constant(municipio_code),
-                               'SECCION_PRESUPUESTAL',
-                               #'PROGRAMATICO_MGA',
-                               'CUENTA_NIVEL_01', 
-                               'CUENTA_NIVEL_02',
-                               'CUENTA_NIVEL_03',
-                               'CUENTA_NIVEL_04',
-                               'CUENTA_NIVEL_05',
-                               'CUENTA_NIVEL_06',
-                               'CUENTA_NIVEL_07',
-                               'CUENTA_NIVEL_08',
-                               
-                               ],
-                    values='APROPIACION_DEFINITIVA',
-                    title="Matriz de composición anual de los municipios",
-                    branchvalues="total")
-    
-    fig.update_layout(width=1000, height=600)
-    
-    st.plotly_chart(fig)
-
+ 
