@@ -51,6 +51,11 @@ municipio=municipio[municipio["VIGENCIA_DEL_GASTO"]=="VIGENCIA ACTUAL"]
 municipio=municipio[municipio["TRIMESTRE"]=="Tercer Trimestre"]
 municipio=municipio[municipio["CUENTA"]!="2.99"]
 municipio=municipio[municipio["CUENTA"]!=""]
+
+municipio['leave'] = municipio["CUENTA"].apply(leave)
+
+municipio=municipio[municipio["leave"]==True]
+
 municipio2=municipio[municipio["VIGENCIA"]==2022].drop_duplicates(subset=["CUENTA"])
 
 municipio=municipio[municipio["VIGENCIA"]==2023].drop_duplicates(subset=["CUENTA"])
@@ -60,9 +65,7 @@ municipiomerge=municipio.merge(municipio2,how="inner",on=["CUENTA"],suffixes=[""
 ##El siguiente código es de Carlos Ortiz con adaptaciones
 
 
-#municipio['leave'] = municipio["CUENTA"].apply(leave)
 
-#municipio=municipio[municipio["leave"]==True]
 
 #municipiomerge['leave'] = municipiomerge["CUENTA"].apply(leave)
 
