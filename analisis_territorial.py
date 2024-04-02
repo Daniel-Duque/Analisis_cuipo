@@ -33,6 +33,11 @@ tab0,tab1,tab2 = st.tabs(['selección','gastos',"nombres"])
 with tab0:
   muni = st.selectbox("NOMBRE_ENTIDAD",
      filtrado1["NOMBRE_ENTIDAD"])
+  
+  ano1 = st.selectbox("primer año",
+     [2021,2022,2023])
+  ano2 = st.selectbox("segundo año",
+     [2021,2022,2023])  
   municipio_code=str(filtrado1[filtrado1["NOMBRE_ENTIDAD"]==muni]["CODIGO_ENTIDAD"].iloc[0])
 
 
@@ -75,9 +80,9 @@ with tab0:
 
   municipio=municipio[municipio["leave"]==True]
 
-  municipio2=municipio[municipio["VIGENCIA"]==2022].drop_duplicates(subset=["CUENTA"])
+  municipio2=municipio[municipio["VIGENCIA"]==ano1].drop_duplicates(subset=["CUENTA"])
 
-  municipio=municipio[municipio["VIGENCIA"]==2023].drop_duplicates(subset=["CUENTA"])
+  municipio=municipio[municipio["VIGENCIA"]==ano2].drop_duplicates(subset=["CUENTA"])
 
 
   municipiomerge=municipio.merge(municipio2,how="inner",on=["CUENTA"],suffixes=["","_y"])
