@@ -11,9 +11,9 @@ Original file is located at
 import pandas as pd
 import os
 import plotly.express as px
-
-
-
+import matplotlib.pyplot as plt
+from plotly.subplots import make_subplots
+import plotly.graph_objs as go
 
 
 import streamlit as st
@@ -29,7 +29,7 @@ municipios_link=r"bases_cuipo_contraloria/municipalities/"
 
 st.title("gasto presupuestal")
 
-tab0,tab1,tab2 = st.tabs(['selección','gastos',"nombres"])
+tab0,tab1,tab2,tab3 = st.tabs(['selección','gastos según diferencias',"gastos","ingresos"])
 with tab0:
   muni = st.selectbox("NOMBRE_ENTIDAD",
      filtrado1["NOMBRE_ENTIDAD"])
@@ -146,13 +146,68 @@ with tab1:
 with tab2:
 
     st.header("Treemap")
+    fig = make_subplots(rows=1, cols=2)
     
-    fig = px.treemap(municipiomerge, 
+    figures = [
+
+    
+    px.treemap(municipio, 
                      path=[px.Constant(municipio_name),
                                
-                               #'PROGRAMATICO_MGA',
-                               'signo',
+                               #'PROGRAMATICO_MGA',                               
+                               'SECCION_PRESUPUESTAL',
+                               'CUENTA_NIVEL_01', 
+                               'CUENTA_NIVEL_02',
+                               'CUENTA_NIVEL_03',
+                               'CUENTA_NIVEL_04',
+                               'CUENTA_NIVEL_05',
+                               'CUENTA_NIVEL_06',
+                               'CUENTA_NIVEL_07',
+                               'CUENTA_NIVEL_08',
                                
+                               ],
+                    values='APROPIACION_DEFINITIVA',
+                    title="Matriz de composición anual de los municipios",
+                    branchvalues="remainder"),
+
+    px.treemap(municipio, 
+                     path=[px.Constant(municipio_name),
+                               
+                               #'PROGRAMATICO_MGA',                               
+                               'SECCION_PRESUPUESTAL',
+                               'CUENTA_NIVEL_01', 
+                               'CUENTA_NIVEL_02',
+                               'CUENTA_NIVEL_03',
+                               'CUENTA_NIVEL_04',
+                               'CUENTA_NIVEL_05',
+                               'CUENTA_NIVEL_06',
+                               'CUENTA_NIVEL_07',
+                               'CUENTA_NIVEL_08',
+                               
+                               ],
+                    values='APROPIACION_DEFINITIVA',
+                    title="Matriz de composición anual de los municipios",
+                    branchvalues="remainder")
+    ]
+    fig = make_subplots(rows=1, cols=2,
+                        specs=[[{"type": "treemap"}],[ {"type": "treemap"}]]) 
+        
+
+    fig.append_trace(figures[0], row=1, col=1)
+    fig.append_trace(figures[0], row=1, col=2)    
+    
+    
+    st.plotly_chart(fig) 
+
+
+with tab3:
+    
+    st.header("Treemap")
+    
+    fig = px.treemap(municipio, 
+                     path=[px.Constant(municipio_name),
+                               
+                               #'PROGRAMATICO_MGA',                               
                                'SECCION_PRESUPUESTAL',
                                'CUENTA_NIVEL_01', 
                                'CUENTA_NIVEL_02',
