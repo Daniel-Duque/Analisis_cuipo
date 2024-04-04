@@ -73,7 +73,7 @@ with tab0:
   municipio=municipio[municipio["VIGENCIA_DEL_GASTO"]=="VIGENCIA ACTUAL"]
 
   municipio=municipio[municipio["TRIMESTRE"]=="Tercer Trimestre"]
-  municipio=municipio[municipio["CUENTA"]!="2.99"]
+  #municipio=municipio[municipio["CUENTA"]!="2.99"]
   municipio=municipio[municipio["CUENTA"]!=""]
 
   municipio['leave'] = municipio["CUENTA"].apply(leave)
@@ -100,8 +100,7 @@ with tab0:
 
 
 
-  filtrado1=pd.read_csv(
-      r"dic/codigos_nombres")
+
   
   
   #pres_gasto=pd.read_csv(r"bases_cuipo_contraloria/OVCF_-_CUIPO_-_Programaci_n_de_Gastos_20240213.csv",skiprows=lambda x: x not in filter_muni)
@@ -131,7 +130,7 @@ with tab1:
                                'CUENTA_NIVEL_06',
                                'CUENTA_NIVEL_07',
                                'CUENTA_NIVEL_08',
-                               
+                               'PROGRAMATICO_MGA'
                                ],
                     values='APROPIACION_DEFINITIVA',
                     title="Matriz de composición anual de los municipios",
@@ -144,14 +143,10 @@ with tab1:
     
   
 with tab2:
-
+  
     st.header("Treemap")
-    fig = make_subplots(rows=1, cols=2)
     
-    figures = [
-
-    
-    px.treemap(municipio, 
+    fig = px.treemap(municipio, 
                      path=[px.Constant(municipio_name),
                                
                                #'PROGRAMATICO_MGA',                               
@@ -164,40 +159,16 @@ with tab2:
                                'CUENTA_NIVEL_06',
                                'CUENTA_NIVEL_07',
                                'CUENTA_NIVEL_08',
-                               
-                               ],
-                    values='APROPIACION_DEFINITIVA',
-                    title="Matriz de composición anual de los municipios",
-                    branchvalues="remainder"),
-
-    px.treemap(municipio, 
-                     path=[px.Constant(municipio_name),
-                               
-                               #'PROGRAMATICO_MGA',                               
-                               'SECCION_PRESUPUESTAL',
-                               'CUENTA_NIVEL_01', 
-                               'CUENTA_NIVEL_02',
-                               'CUENTA_NIVEL_03',
-                               'CUENTA_NIVEL_04',
-                               'CUENTA_NIVEL_05',
-                               'CUENTA_NIVEL_06',
-                               'CUENTA_NIVEL_07',
-                               'CUENTA_NIVEL_08',
-                               
+                               'PROGRAMATICO_MGA'
                                ],
                     values='APROPIACION_DEFINITIVA',
                     title="Matriz de composición anual de los municipios",
                     branchvalues="remainder")
-    ]
-    fig = make_subplots(rows=1, cols=2,
-                        specs=[[{"type": "treemap"}],[ {"type": "treemap"}]]) 
-        
-
-    fig.append_trace(figures[0], row=1, col=1)
-    fig.append_trace(figures[0], row=1, col=2)    
     
+    fig.update_layout(width=1000, height=600)
     
     st.plotly_chart(fig) 
+
 
 
 with tab3:
@@ -217,7 +188,7 @@ with tab3:
                                'CUENTA_NIVEL_06',
                                'CUENTA_NIVEL_07',
                                'CUENTA_NIVEL_08',
-                               
+                               'PROGRAMATICO_MGA'
                                ],
                     values='APROPIACION_DEFINITIVA',
                     title="Matriz de composición anual de los municipios",
