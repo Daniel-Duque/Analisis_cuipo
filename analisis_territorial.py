@@ -29,7 +29,7 @@ municipios_link=r"bases_cuipo_contraloria/municipalities/"
 
 st.title("gasto presupuestal")
 
-tab0,tab1,tab2,tab3 = st.tabs(['selección','gastos según diferencias',"gastos","ingresos"])
+tab0,tab1,tab2,tab3 = st.tabs(['selección','gastos según diferencias',"gastos e ingresos","ingresos"])
 with tab0:
   muni = st.selectbox("NOMBRE_ENTIDAD",
      filtrado1["NOMBRE_ENTIDAD"])
@@ -70,16 +70,17 @@ with tab0:
 
   # Apply the classification function to each row
   municipio_ingresos=municipio[municipio["tipo"]=="eje_ingreso"]
-  municipio=municipio[municipio["VIGENCIA_DEL_GASTO"]=="VIGENCIA ACTUAL"]
+  #municipio=municipio[municipio["VIGENCIA_DEL_GASTO"]=="VIGENCIA ACTUAL"]
 
-  municipio=municipio[municipio["TRIMESTRE"]=="Tercer Trimestre"]
+  municipio=municipio[municipio["TRIMESTRE"]=="Cuarto Trimestre"]
   #municipio=municipio[municipio["CUENTA"]!="2.99"]
   municipio=municipio[municipio["CUENTA"]!=""]
 
   municipio['leave'] = municipio["CUENTA"].apply(leave)
 
   municipio=municipio[municipio["leave"]==True]
-
+  #we will add every value in a column
+  municipio["valor"]=municipio.fillna(0).apply(lambda row: row["PAGOS"]+row["TOTAL_RECAUDO"],axis=1)
   municipio2=municipio[municipio["VIGENCIA"]==ano1].drop_duplicates(subset=["CUENTA"])
 
   municipio=municipio[municipio["VIGENCIA"]==ano2].drop_duplicates(subset=["CUENTA"])
@@ -121,7 +122,7 @@ with tab1:
                                #'PROGRAMATICO_MGA',
                                'signo',
                                
-                               'SECCION_PRESUPUESTAL',
+                               #'SECCION_PRESUPUESTAL',
                                'CUENTA_NIVEL_01', 
                                'CUENTA_NIVEL_02',
                                'CUENTA_NIVEL_03',
@@ -130,7 +131,7 @@ with tab1:
                                'CUENTA_NIVEL_06',
                                'CUENTA_NIVEL_07',
                                'CUENTA_NIVEL_08',
-                               'PROGRAMATICO_MGA'
+                               #'PROGRAMATICO_MGA'
                                ],
                     values='APROPIACION_DEFINITIVA',
                     title="Matriz de composición anual de los municipios",
@@ -150,7 +151,7 @@ with tab2:
                      path=[px.Constant(municipio_name),
                                
                                #'PROGRAMATICO_MGA',                               
-                               'SECCION_PRESUPUESTAL',
+                               #'SECCION_PRESUPUESTAL',
                                'CUENTA_NIVEL_01', 
                                'CUENTA_NIVEL_02',
                                'CUENTA_NIVEL_03',
@@ -159,9 +160,9 @@ with tab2:
                                'CUENTA_NIVEL_06',
                                'CUENTA_NIVEL_07',
                                'CUENTA_NIVEL_08',
-                               'PROGRAMATICO_MGA'
+                               #'PROGRAMATICO_MGA'
                                ],
-                    values='APROPIACION_DEFINITIVA',
+                    values='valor',
                     title="Matriz de composición anual de los municipios",
                     branchvalues="remainder")
     
@@ -179,7 +180,7 @@ with tab3:
                      path=[px.Constant(municipio_name),
                                
                                #'PROGRAMATICO_MGA',                               
-                               'SECCION_PRESUPUESTAL',
+                               #'SECCION_PRESUPUESTAL',
                                'CUENTA_NIVEL_01', 
                                'CUENTA_NIVEL_02',
                                'CUENTA_NIVEL_03',
@@ -188,7 +189,7 @@ with tab3:
                                'CUENTA_NIVEL_06',
                                'CUENTA_NIVEL_07',
                                'CUENTA_NIVEL_08',
-                               'PROGRAMATICO_MGA'
+                               #'PROGRAMATICO_MGA'
                                ],
                     values='APROPIACION_DEFINITIVA',
                     title="Matriz de composición anual de los municipios",
