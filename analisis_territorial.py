@@ -58,7 +58,7 @@ with tab0:
   'CUENTA_NIVEL_08',
 
   ]
-
+#
   def leave(valor):
       pattern=valor+"."
       if True in municipio["CUENTA"].str.match(pattern).values:
