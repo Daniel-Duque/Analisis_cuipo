@@ -121,7 +121,7 @@ with tab1:
     municuenta=municipio[municipio["NOMBRE_CUENTA"]==cuentita]
     municuenta["Apropiacion"]=municuenta['PAGOS'].isnull()
 
-    fig = px.line(municuenta, x="VIGENCIA", y="alor", title='Valores de la cuenta')
+    fig = px.line(municuenta, x="VIGENCIA", y="valor", title='Valores de la cuenta')
 
 
     
