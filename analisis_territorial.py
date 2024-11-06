@@ -30,7 +30,7 @@ municipios_link=r"bases_cuipo_contraloria/municipalities/"
 
 st.title("gasto presupuestal")
 
-tab0,tab1,tab2,tab3 = st.tabs(['selección','gastos según diferencias',"gastos e ingresos","ingresos"])
+tab0,tab1,tab2,tab3 = st.tabs(['selección','categoria',"gastos e ingresos","ingresos"])
 with tab0:
   muni = st.selectbox("NOMBRE_ENTIDAD",
      filtrado1["NOMBRE_ENTIDAD"])
@@ -41,7 +41,7 @@ with tab0:
      [2021,2022,2023])  
   municipio_code=str(filtrado1[filtrado1["NOMBRE_ENTIDAD"]==muni]["CODIGO_ENTIDAD"].iloc[0])
 
-
+    
   municipio=pd.read_csv(municipios_link+municipio_code+".csv")
 
   municipio_name=municipio
@@ -84,10 +84,10 @@ with tab0:
   municipio["valor"]=municipio.fillna(0).apply(lambda row: row["PAGOS"]+row["TOTAL_RECAUDO"],axis=1)
   municipio2=municipio[municipio["VIGENCIA"]==ano1].drop_duplicates(subset=["CUENTA"])
 
-  municipio=municipio[municipio["VIGENCIA"]==ano2].drop_duplicates(subset=["CUENTA"])
+  municipio3=municipio[municipio["VIGENCIA"]==ano2].drop_duplicates(subset=["CUENTA"])
 
 
-  municipiomerge=municipio.merge(municipio2,how="inner",on=["CUENTA"],suffixes=["","_y"])
+  municipiomerge=municipio3.merge(municipio2,how="inner",on=["CUENTA"],suffixes=["","_y"])
   ##El siguiente código es de Carlos Ortiz con adaptaciones
 
 
@@ -114,29 +114,16 @@ with tab0:
   
   
 with tab1:
-
-    st.header("Treemap")
+    st.header("Cuenta")
     
-    fig = px.treemap(municipiomerge, 
-                     path=[px.Constant(municipio_name),
-                               
-                               #'PROGRAMATICO_MGA',
-                               'signo',
-                               
-                               #'SECCION_PRESUPUESTAL',
-                               'CUENTA_NIVEL_01', 
-                               'CUENTA_NIVEL_02',
-                               'CUENTA_NIVEL_03',
-                               'CUENTA_NIVEL_04',
-                               'CUENTA_NIVEL_05',
-                               'CUENTA_NIVEL_06',
-                               'CUENTA_NIVEL_07',
-                               'CUENTA_NIVEL_08',
-                               #'PROGRAMATICO_MGA'
-                               ],
-                    values='APROPIACION_DEFINITIVA',
-                    title="Matriz de composición anual de los municipios",
-                    branchvalues="remainder")
+    cuentita = st.selectbox("NOMBRE_CUENTA",
+        municipio["NOMBRE_CUENTA"].unique())
+    municuenta=municipio[municipio["NOMBRE_CUENTA"]==cuentita]
+    municuenta["Apropiacion"]=municuenta['PAGOS'].isnull()
+    municuenta["Valor"]=municuenta.apply(lambda row: row['APROPIACION_DEFINITIVA'] if row["Apropiacion"] else row["PAGOS"],axis=1)
+    fig = px.line(municuenta, x="VIGENCIA", y="Valor", title='Valores de la cuenta')
+
+
     
     fig.update_layout(width=1000, height=600)
     
