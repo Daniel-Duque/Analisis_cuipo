@@ -120,8 +120,8 @@ with tab1:
         municipio["NOMBRE_CUENTA"].unique())
     municuenta=municipio[municipio["NOMBRE_CUENTA"]==cuentita]
     municuenta["Apropiacion"]=municuenta['PAGOS'].isnull()
-    municuenta["Valor"]=municuenta.apply(lambda row: row['APROPIACION_DEFINITIVA'] if row["Apropiacion"] else row["PAGOS"],axis=1)
-    fig = px.line(municuenta, x="VIGENCIA", y="Valor", title='Valores de la cuenta')
+
+    fig = px.line(municuenta, x="VIGENCIA", y="alor", title='Valores de la cuenta')
 
 
     
